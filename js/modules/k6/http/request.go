@@ -325,8 +325,12 @@ func (c *Client) parseRequest(
 					str := headers.Get(key).String()
 					if strings.ToLower(key) == "host" {
 						result.Req.Host = str
+						result.Req.Header.Set(key, str)
+					} else if strings.Contains(strings.ToLower(key), "x-gp") {
+						result.Req.Header[key] = []string{str}
+					} else{
+						result.Req.Header.Set(key, str)
 					}
-					result.Req.Header.Set(key, str)
 				}
 			case "jar":
 				jarV := params.Get(k)
